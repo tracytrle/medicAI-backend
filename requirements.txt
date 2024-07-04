@@ -1,0 +1,13 @@
+bcrypt
+blinker
+click
+Flask
+Flask-Bcrypt
+Flask-SQLAlchemy
+itsdangerous
+Jinja2
+MarkupSafe
+python-dotenv
+SQLAlchemy
+typing_extensions
+Werkzeug
