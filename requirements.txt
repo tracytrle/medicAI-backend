@@ -11,3 +11,5 @@ python-dotenv
 SQLAlchemy
 typing_extensions
 Werkzeug
+flask-session
+redis
