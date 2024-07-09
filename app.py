@@ -48,7 +48,7 @@ def register_user():
     new_user = User(email=email, password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
-  
+    session['user_id'] = new_user.id
     return jsonify({
         "id": new_user.id,
         "email": new_user.email
@@ -72,7 +72,10 @@ def login_user():
         "email": user.email
     })
 
-        
+@app.route('/logout', methods=["POST"]) # This route will be used to log out the current user.
+def logout_user():
+    session.pop('user_id', None)
+    return "200"      
 
 if __name__ == "__main__":
     app.run(debug=True)
