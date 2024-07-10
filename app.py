@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.config.from_object(ApplicationConfig)
 bcrypt = Bcrypt(app)
 server_session = Session(app)
-cors = CORS(app)
+cors = CORS(app, supports_credentials=True)
 db.init_app(app)
 
 with app.app_context():
@@ -21,19 +21,21 @@ def index():
   return "Hello, World!"
 
 #return current loggin user infor
-@app.route('/@me')
+@app.route('/auth', methods=["GET"])
 def get_current_user():
-    user_id = session.get('user_id')
+    user_id = session.get('user_id') 
     
     if not user_id:
         return jsonify({"error": "Unauthorized"}), 401
 
     user = User.query.filter_by(id=user_id).first()    
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
     return jsonify({
         "id": user.id,
         "email": user.email
     })
-
 
 @app.route('/register', methods=["POST"]) # This route will be used to register a new user.
 def register_user():
@@ -51,7 +53,8 @@ def register_user():
     session['user_id'] = new_user.id
     return jsonify({
         "id": new_user.id,
-        "email": new_user.email
+        "email": new_user.email,
+        "session_id": session.sid
     })
 
 @app.route('/login', methods=["POST"]) # This route will be used to log in an existing user.
